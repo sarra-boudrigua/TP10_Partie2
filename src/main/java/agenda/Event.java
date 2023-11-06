@@ -8,14 +8,14 @@ public class Event {
      * The myTitle of this event
      */
     private String myTitle;
-    
+
     /**
      * The starting time of the event
      */
-    private LocalDateTime myStart;
+    protected LocalDateTime myStart;
 
     /**
-     * The durarion of the event 
+     * The durarion of the event
      */
     private Duration myDuration;
 
@@ -41,9 +41,16 @@ public class Event {
      */
     public boolean isInDay(LocalDate aDay) {
         // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        boolean isInDay = false;
+        LocalDate start = myStart.toLocalDate();
+        if ((aDay.isAfter(start)) || (aDay.isEqual(start))) {
+            if (aDay.isBefore(myStart.plus(myDuration).toLocalDate()) || aDay.isEqual(myStart.plus(myDuration).toLocalDate())) {
+                isInDay = true;
+            }
+        }
+        return isInDay;
     }
-   
+
     /**
      * @return the myTitle
      */
@@ -66,6 +73,9 @@ public class Event {
         return myDuration;
     }
 
-   
-    
+    @Override
+    public String toString() {
+        return "Event{" + "myTitle=" + myTitle + ", myStart=" + myStart + ", myDuration=" + myDuration + '}';
+    }
+
 }

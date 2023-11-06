@@ -8,6 +8,9 @@ import java.time.temporal.ChronoUnit;
  * Description : A repetitive Event
  */
 public class RepetitiveEvent extends Event {
+
+    private ChronoUnit frequency;
+    private List<LocalDate> lesExceptions;
     /**
      * Constructs a repetitive event
      *
@@ -24,7 +27,8 @@ public class RepetitiveEvent extends Event {
     public RepetitiveEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency) {
         super(title, start, duration);
         // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        this.frequency = frequency;
+        lesExceptions = new ArrayList<>();
     }
 
     /**
@@ -34,7 +38,7 @@ public class RepetitiveEvent extends Event {
      */
     public void addException(LocalDate date) {
         // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        lesExceptions.add(date);
     }
 
     /**
@@ -43,7 +47,39 @@ public class RepetitiveEvent extends Event {
      */
     public ChronoUnit getFrequency() {
         // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");    
+        return frequency;
+    }
+
+    @Override
+    public boolean isInDay(LocalDate aDay) {
+        if (super.isInDay(aDay)) {
+            return true;
+        }
+        for (LocalDate date : lesExceptions) {
+            if (aDay.isEqual(date)) {
+                return false;
+            }
+        }
+        int year = myStart.getYear();
+        int month = myStart.getMonthValue();
+        int day = myStart.getDayOfMonth();
+
+        while (aDay.isAfter(LocalDate.of(year, month, day))) {
+            if (super.isInDay(LocalDate.of(year, month, day))) {
+                return true;
+            }else{
+                if(ChronoUnit.DAYS==frequency){
+                    day+=1;
+                }
+                if(ChronoUnit.WEEKS==frequency){
+                    day+=7;
+                }
+                if(ChronoUnit.MONTHS==frequency){
+                    month+=1;
+                }
+            }
+        }
+        return false;
     }
 
 }
